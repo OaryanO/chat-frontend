@@ -1,21 +1,47 @@
+// import { useEffect } from "react";
+// import { useSelector, useDispatch } from "react-redux";
+// import { setMessages } from "../redux/messageSlice";
+
+// const useGetRealTimeMessage = () => {
+//     const { socket } = useSelector((store) => store.socket);
+//     const { messages } = useSelector((store) => store.message);
+//     const dispatch = useDispatch();
+
+//     useEffect(() => {
+//         if (!socket) return;
+
+//         socket.on("newMessage", (newMessage) => {
+//             dispatch(setMessages([...messages, newMessage]));
+//         });
+
+//         return () => socket.off("newMessage");
+//     }, [socket, messages, dispatch]);
+// };
+
+// export default useGetRealTimeMessage;
+
+
+
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setMessages } from "../redux/messageSlice";
+import { getSocketInstance } from "../socket";
 
 const useGetRealTimeMessage = () => {
-    const { socket } = useSelector((store) => store.socket);
-    const { messages } = useSelector((store) => store.message);
-    const dispatch = useDispatch();
+  const socket = getSocketInstance();
+  const { messages } = useSelector((store) => store.message);
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (!socket) return;
+  useEffect(() => {
+    if (!socket) return;
 
-        socket.on("newMessage", (newMessage) => {
-            dispatch(setMessages([...messages, newMessage]));
-        });
+    socket.on("newMessage", (newMessage) => {
+      dispatch(setMessages([...messages, newMessage]));
+    });
 
-        return () => socket.off("newMessage");
-    }, [socket, messages, dispatch]);
+    return () => socket.off("newMessage");
+  }, [socket, messages, dispatch]);
 };
 
 export default useGetRealTimeMessage;
+
